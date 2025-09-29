@@ -3,7 +3,8 @@ import { getBookById, getBookIndexById, bookExists, booksFromUser, booksFromModu
 
 document.querySelector('#app').innerHTML = `
   <img src="./public/logoBatoi.png" alt="logo" style="height:200px; display: block; margin: 0 auto;"/>
-  <p>Abre la consola para ver su funcionamiento</p>
+  <h1 style="text-align: center;">BatoiBooks</h1>
+  <p style="text-align: center;">Abre la consola para ver su funcionamiento</p>
 `
 
 try {
