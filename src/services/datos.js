@@ -1843,21 +1843,21 @@ const data = {
       "password": "1234"
     },
     {
+      "id": 3,
       "email": "juanseguravasco@gmail.com",
       "nick": "Juan",
-      "id": 3,
       "password": "1234"
     },
     {
+      "id": 4,
       "email": "marta@gmail.lan",
       "nick": "Marta",
-      "id": 4,
       "password": "1234"
     },
     {
+      "id": 5,
       "email": "Ximo@gmail.lan",
       "nick": "Ximo",
-      "id": 5,
       "password": "1234"
     }
   ],
@@ -1937,4 +1937,4 @@ const data = {
   ]
 }
 
-export default data
+export default data;
