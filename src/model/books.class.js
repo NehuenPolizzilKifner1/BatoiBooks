@@ -1,30 +1,32 @@
 import Book from './book.class.js';
+import {getDBBooks, addDBBook, removeDBBook, changeDBBook} from '../services/api.js';
+
 export default class Books {
     constructor (){
         this.data = [];
     }
 
-    populate(booksArray){
-        this.data = booksArray.map(b => new Book (b));
+    async populate(){
+        const books = await getDBBooks();
+        this.data = books.map(b => new Book (b));
     }
 
-    addBook(bookData){
-        const nextId = this.data.length > 0 ? Math.max(...this.data.map(b => b.id)) + 1 : 1;
-        const newBook = new Book({ id: nextId, ...bookData });
-        this.data.push(newBook);
-        return newBook;
+    async addBook(bookData){
+        const newBook = await addDBBook(bookData);
+        const book = new Book (newBook);
+        this.data.push(book);
+        return book;
     }
 
-    removeBook(bookId){
-        const idx = this.data.findIndex(b => Number(b.id) === Number(bookId));
-        if (idx === -1) throw new Error(`Book with id ${bookId} not found`);
-        this.data.splice(idx, 1);
+    async removeBook(bookId){
+        await removeDBBook(bookId);
+        this.data = this.data.filter(b => b.id !== bookId);
     }
 
-    changeBook(updatedBook){
-        const index = this.data.findIndex(b => b.id === updatedBook.id);
-        if (index === -1) throw new Error(`Book with id ${updatedBook.id} not found`);
-        this.data[index] = new Book(updatedBook);
+    async changeBook(updatedBook){
+        const modified = await changeDBBook(updatedBook);
+        const index = this.data.findIndex(b => b.id === modified.id);
+        if(index !== -1) this.data[index] = new Book(modified);
         return this.data[index];
     }
 
@@ -42,11 +44,5 @@ export default class Books {
 
     booksWithStatus(status) {
         return this.data.filter(b => b.status === status);
-    }
-
-    incrementPriceOfBooks(percentage) {
-        const factor = 1 + percentage;
-        this.data = this.data.map(b => new Book({ ...b, price: +(b.price * factor).toFixed(2) }));
-        return this.data;
     }
 }

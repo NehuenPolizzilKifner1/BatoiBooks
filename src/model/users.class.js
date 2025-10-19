@@ -1,30 +1,39 @@
 import User from './users.class.js';
+import {getDBUser, addDBUser, removeDBUser, changeDBUser, changeDBUserPassword} from '../services/api.js';
+
 export default class Users {
     constructor (){
         this.data = [];
     }
 
-    populate(usersArray){
-        this.data = usersArray.map(u => new User(u));
+    async populate(){
+        const users = await getDBUsers();
+        this.data = users.map(u => new User(u));
     }
 
-    addUser(userData){
-        const newId = this.data.length ? Math.max(...this.data.map(u => u.id)) + 1 : 1;
-        const user = new User(newId, userData.nick, userData.email, userData.password);
+    async addUser(userData){
+        const newUser = await addDBUser();
+        const user = new User (newUser);
         this.data.push(user);
         return user;
     }
 
-    removeUser(userId){
-        const index = this.data.findIndex(u => u.id === userId);
-        if (index === -1) throw new Error(`User with id ${userId} not found`);
-        this.data.splice(index, 1);
+    async removeUser(userId){
+        await removeDBUser(userId);
+        this.data = this.data.filter(u => u.id !== userId);
     }
 
-    changeUser(updatedUser){
-        const index = this.data.findIndex(u => u.id === updatedUser.id);
-        if (index === -1) throw new Error(`User with id ${updatedUser.id} not found`);
-        this.data[index] = new User(updatedUser.id, updatedUser.nick, updatedUser.email, updatedUser.password);
+    async changeUser(updatedUser){
+        const modified = await changeDBUser(updatedUser);
+        const index = this.data.findIndex(u => u.id === modified.id);
+        if (index !== -1) this.data[index] = new User(modified);
+        return this.data[index];
+    }
+
+    async changeUserPassword(userId, newPassword) {
+        const modified = await changeDBUserPassword(userId, newPassword);
+        const index = this.data.findIndex(u => u.id === modified.id);
+        if (index !== -1) this.data[index] = new User(modified);
         return this.data[index];
     }
 
