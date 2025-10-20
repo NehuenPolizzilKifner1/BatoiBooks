@@ -17,11 +17,11 @@ const books = new Books();
   await users.populate();
   await books.populate();
 
-  console.group('📚 Libros del módulo 5021');
+  console.group('Libros del módulo 5021');
   console.log(books.booksFromModule('5021'));
   console.groupEnd();
 
-  console.group('✨ Libros nuevos (status "new")');
+  console.group('Libros nuevos (status "new")');
   console.log(books.booksWithStatus('new'));
   console.groupEnd();
 })();
