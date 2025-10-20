@@ -20,7 +20,7 @@ async function getDBBooks(){
 }
 
 async function getDBUser(id){
-    const res = await fetch(`${BASE_URL}/users/${id}`);
+  const res = await fetch(`${BASE_URL}/users/${id}`);
   if (!res.ok) throw new Error("Usuario no encontrado");
   return res.json();
 }

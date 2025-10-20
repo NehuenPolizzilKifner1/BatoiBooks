@@ -1,5 +1,5 @@
 import User from './users.class.js';
-import {getDBUser, addDBUser, removeDBUser, changeDBUser, changeDBUserPassword} from '../services/api.js';
+import {getDBUsers, addDBUser, removeDBUser, changeDBUser, changeDBUserPassword} from '../services/api.js';
 
 export default class Users {
     constructor (){
