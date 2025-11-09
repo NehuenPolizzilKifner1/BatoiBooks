@@ -1,12 +1,12 @@
-export default class User{
-    constructor(id, email, nick, password){
-        this.id = id;
-        this.email = email;
-        this.nick = nick;
-        this.password = password;
-    }
+export default class User {
+  constructor(id, nick, email, password) {
+    this.id = id;
+    this.nick = nick;
+    this.email = email;
+    this.password = password;
+  }
 
-    toString(){
-        return this.id + ', ' + this.email + ', ' + this.nick + ', ' + this.password;
-    }
+  toString() {
+    return `User: ${this.id} - ${this.username} - ${this.email}`;
+  }
 }

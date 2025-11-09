@@ -1,24 +1,33 @@
-import Module from './module.class.js';
-import {getDBModules} from '../services/api.js';
+import Module from "./module.class.js";
+import { getDBModules } from "../services/api.js";
 
 export default class Modules {
-    constructor (){
-        this.data = [];
-    }
+  constructor() {
+    this.data = [];
+  }
 
-    async populate(){
-        const modules = await getDBModules();
-        this.data = modules.map(m => new Module(m.code, m.cliteral, m.vliteral, m.courseId));
-    }
+  async populate() {
+    const data = await getDBModules();
+    this.data = data.map(
+      (item) =>
+        new Module(item.code, item.cliteral, item.vliteral, item.courseId)
+    );
+  }
 
-    getModuleByCode(code){
-        const module = this.data.find(m => m.code === code);
-        if (!module) throw new Error(`Module with code ${code} not found`);
-        return module;
-    }
+  toString() {
+    let text = `Modules: ${this.data.length}`;
+    this.data.forEach((item) => {
+      text += `\n${item.toString()}`;
+    });
 
-    toString(){
-        return this.data.map(m => m.toString()).join('\n');
+    return text;
+  }
+
+  getModuleByCode(moduleCode) {
+    const module = this.data.find((item) => item.code === moduleCode);
+    if (!module) {
+      throw new Error(`No existe el módulo con code ${moduleCode}`);
     }
+    return module;
+  }
 }
-

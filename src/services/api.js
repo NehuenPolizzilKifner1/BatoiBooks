@@ -1,95 +1,160 @@
+const SERVER = 'http://localhost:3000';
 
-const BASE_URL = "http://127.0.0.1:3000";
-
-async function getDBUsers(){
-    const res = await fetch(`${BASE_URL}/users`);
-    if (!res.ok) throw new Error("Error al obtener los usuarios");
-    return res.json();
+async function getDBBooks() {
+  if (!SERVER) {
+    throw "La variable de entorno VITE_URL_API no está definida";
+  }
+  const response = await fetch(`${SERVER}/books`);
+  if (!response.ok) {
+    throw `Error ${response.status} de la BBDD: ${response.statusText}`;
+  }
+  const data = await response.json();
+  return data;
 }
 
-async function getDBModules(){
-    const res = await fetch(`${BASE_URL}/modules`);
-    if (!res.ok) throw new Error("Error al obtener los módulos");
-    return res.json();
+async function getDBBook(bookId) {
+  const response = await fetch(`${SERVER}/books/${bookId}`);
+  if (!response.ok) {
+    throw `Error ${response.status} de la BBDD: ${response.statusText}`;
+  }
+  const data = await response.json();
+  return data;
 }
 
-async function getDBBooks(){
-    const res = await fetch(`${BASE_URL}/books`);
-    if (!res.ok) throw new Error("Error al obtener los libros");
-    return res.json();
-}
-
-async function getDBUser(id){
-  const res = await fetch(`${BASE_URL}/users/${id}`);
-  if (!res.ok) throw new Error("Usuario no encontrado");
-  return res.json();
-}
-
-async function getDBBook(id){
-    const res = await fetch(`${BASE_URL}/books/${id}`);
-    if (!res.ok) throw new Error("Libro no encontrado");
-    return res.json();
-}
-
-async function addDBBook(book){
-    const res = await fetch(`${BASE_URL}/books`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(book)
-    });
-    if (!res.ok) throw new Error("Error al añadir libro");
-    return res.json();
-}
-
-async function addDBUser(user){
-    const res = await fetch(`${BASE_URL}/users`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user)
-    });
-    if (!res.ok) throw new Error("Error al añadir usuario");
-    return res.json();
-}
-
-async function removeDBBook(id){
-    const res = await fetch(`${BASE_URL}/books/${id}`, { method: "DELETE" });
-  if (!res.ok) throw new Error("Error al borrar libro");
-}
-
-async function removeDBUser(id){
-    const res = await fetch(`${BASE_URL}/users/${id}`, { method: "DELETE" });
-  if (!res.ok) throw new Error("Error al borrar usuario");
-}
-
-async function changeDBBook(book){
-    const res = await fetch(`${BASE_URL}/books/${book.id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(book)
+async function addDBBook(newBook) {
+  const response = await fetch(`${SERVER}/books`, {
+    method: "POST",
+    body: JSON.stringify(newBook),
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
-  if (!res.ok) throw new Error("Error al modificar libro");
-  return res.json();
+  if (!response.ok) {
+    throw `Error ${response.status} de la BBDD: ${response.statusText}`;
+  }
+  const data = await response.json();
+  return data;
 }
-
-async function changeDBUser(user){
-    const res = await fetch(`${BASE_URL}/users/${user.id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(user)
+async function removeDBBook(bookId) {
+  const response = await fetch(`${SERVER}/books/${bookId}`, {
+    method: "DELETE",
   });
-  if (!res.ok) throw new Error("Error al modificar usuario");
-  return res.json();
+  if (!response.ok) {
+    throw `Error ${response.status} de la BBDD: ${response.statusText}`;
+  }
+  const data = await response.json();
+  return data;
 }
 
-async function changeDBUserPassword(id, newPassword){
-const user = await getDBUser(id);
-  user.password = newPassword;
-  return changeDBUser(user);
+async function changeDBBook(newBook) {
+  const response = await fetch(`${SERVER}/books/${newBook.id}`, {
+    method: "PUT",
+    body: JSON.stringify(newBook),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw `Error ${response.status} de la BBDD: ${response.statusText}`;
+  }
+  const data = await response.json();
+  return data;
+}
+
+async function getDBModules() {
+  const response = await fetch(`${SERVER}/modules`);
+  if (!response.ok) {
+    throw `Error ${response.status} de la BBDD: ${response.statusText}`;
+  }
+  const data = await response.json();
+  return data;
+}
+
+async function getDBModule(moduleCode) {
+  const response = await fetch(`${SERVER}/modules?code=${moduleCode}`);
+  if (!response.ok) {
+    throw `Error ${response.status} de la BBDD: ${response.statusText}`;
+  }
+  const data = await response.json();
+  return data[0];
+}
+
+async function getDBUsers() {
+  const response = await fetch(`${SERVER}/users`);
+  if (!response.ok) {
+    throw `Error ${response.status} de la BBDD: ${response.statusText}`;
+  }
+  const data = await response.json();
+  return data;
+}
+
+async function getDBUser(userId) {
+  const response = await fetch(`${SERVER}/users/${userId}`);
+  if (!response.ok) {
+    throw `Error ${response.status} de la BBDD: ${response.statusText}`;
+  }
+  const data = await response.json();
+  return data;
+}
+
+async function addDBUser(newUser) {
+  const response = await fetch(`${SERVER}/users`, {
+    method: "POST",
+    body: JSON.stringify(newUser),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw `Error ${response.status} de la BBDD: ${response.statusText}`;
+  }
+  const data = await response.json();
+  return data;
+}
+async function removeDBUser(userId) {
+  const response = await fetch(`${SERVER}/users/${userId}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    throw `Error ${response.status} de la BBDD: ${response.statusText}`;
+  }
+  const data = await response.json();
+  return data;
+}
+
+async function changeDBUser(newUser) {
+  const response = await fetch(`${SERVER}/users/${newUser.id}`, {
+    method: "PUT",
+    body: JSON.stringify(newUser),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw `Error ${response.status} de la BBDD: ${response.statusText}`;
+  }
+  const data = await response.json();
+  return data;
+}
+async function changeDBUserPassword(userId, newPassword) {
+  const response = await fetch(`${SERVER}/users/${userId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ password: newPassword }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw `Error ${response.status} de la BBDD: ${response.statusText}`;
+  }
+  const data = await response.json();
+  return data;
 }
 
 export{
     getDBUsers,
     getDBModules,
+    getDBModule,
     getDBBooks,
     getDBUser,
     getDBBook,

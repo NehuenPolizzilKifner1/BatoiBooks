@@ -1,50 +1,82 @@
-import User from './users.class.js';
-import {getDBUsers, addDBUser, removeDBUser, changeDBUser, changeDBUserPassword} from '../services/api.js';
+import User from './user.class.js';
+import { 
+  getDBUsers,
+  getDBUser,
+  addDBUser,
+  removeDBUser,
+  changeDBUser,
+  changeDBUserPassword,
+} from '../services/api.js';
 
 export default class Users {
-    constructor (){
-        this.data = [];
-    }
+  constructor() {
+    this.data = [];
+  }
 
-    async populate(){
-        const users = await getDBUsers();
-        this.data = users.map(u => new User(u));
-    }
+  async populate() {
+    const data = await getDBUsers();
+    this.data = data.map(item => new User(item.id, item.nick, item.email, item.password));
+  }
 
-    async addUser(userData){
-        const newUser = await addDBUser();
-        const user = new User (newUser);
-        this.data.push(user);
-        return user;
-    }
+  async addUser(user) {
+    const dataAdded = await addDBUser(user)
+    const newUser = new User(dataAdded.id, dataAdded.nick, dataAdded.email, dataAdded.password)
+    this.data.push(newUser)
+    return newUser
+  }
 
-    async removeUser(userId){
-        await removeDBUser(userId);
-        this.data = this.data.filter(u => u.id !== userId);
-    }
+  async removeUser(userId) {
+    await removeDBUser(userId)
+    // Si no existe el usuario se habrá lanzado un error
+    const index = this.getUserIndexById(userId)
+    this.data.splice(index, 1)
+  }
 
-    async changeUser(updatedUser){
-        const modified = await changeDBUser(updatedUser);
-        const index = this.data.findIndex(u => u.id === modified.id);
-        if (index !== -1) this.data[index] = new User(modified);
-        return this.data[index];
-    }
+  async changeUser(user) {
+    const dataChanged = await changeDBUser(user)
+    const modifiedUser = new User(dataChanged.id, dataChanged.nick, dataChanged.email, dataChanged.password)
+    const index = this.getUserIndexById(user.id)
+    this.data.splice(index, 1, modifiedUser);
+    return modifiedUser
+  }
 
-    async changeUserPassword(userId, newPassword) {
-        const modified = await changeDBUserPassword(userId, newPassword);
-        const index = this.data.findIndex(u => u.id === modified.id);
-        if (index !== -1) this.data[index] = new User(modified);
-        return this.data[index];
-    }
+  async changeUserPassword(userId, newPassword) {
+    const dataChanged = await changeDBUserPassword(userId, newPassword)
+    const modifiedUser = new User(dataChanged.id, dataChanged.nick, dataChanged.email, dataChanged.password)
+    const index = this.getUserIndexById(userId)
+    this.data.splice(index, 1, modifiedUser);
+    return modifiedUser
+  }
 
-    getUserByNick(nick) {
-        const user = this.data.find(u => u.nick === nick);
-        if (!user) throw new Error(`User with nick "${nick}" not found`);
-        return user;
-    }
+  toString() {
+    let text = `Users: ${this.data.length}`;
+    this.data.forEach(item => {
+      text += `\n${item.toString()}`;
+    });
+    return text;
+  }
 
-    toString(){
-        return this.data.map(u => u.toString()).join('\n');
+  async getUserById(userId) {
+    const user = this.data.find((item) => item.id === userId)
+    if (!user) {
+      throw new Error(`No existe el usuario con id ${userId}`)
     }
+    return user
+  }
+  
+  getUserIndexById(userId) {
+    const index = this.data.findIndex((item) => item.id === userId)
+    if (index === -1) {
+      throw new Error(`No existe el usuario con id ${userId}`)
+    }
+    return index
+  }
+
+  getUserByNickName(nick) {
+    const user = this.data.find((item) => item.nick === nick)
+    if (!user) {
+      throw new Error(`No existe el usuario con nick ${nick}`)
+    }
+    return user
+  }
 }
-
