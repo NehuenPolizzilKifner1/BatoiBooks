@@ -2199,13 +2199,34 @@
       "id": "10"
     },
     {
-      "id": "2687",
-      "moduleCode": "0016",
+      "id": "9f10",
+      "moduleCode": "0028",
       "publisher": "sdf",
-      "price": 334,
-      "pages": 123,
+      "price": 34,
+      "pages": 432,
+      "status": "good",
+      "comments": "hola",
+      "userId": 2
+    },
+    {
+      "id": null,
+      "moduleCode": "0016",
+      "publisher": "lk",
+      "price": 45,
+      "pages": 454,
+      "status": "digital",
+      "comments": "",
+      "userId": 2
+    },
+    {
+      "id": "d372",
+      "moduleCode": "0046",
+      "publisher": "asd",
+      "price": 0,
+      "pages": 314,
       "status": "new",
-      "comments": "edfsdf"
+      "comments": "",
+      "userId": 2
     }
   ]
 }
